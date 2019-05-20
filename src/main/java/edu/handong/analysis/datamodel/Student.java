@@ -16,9 +16,9 @@ public class Student {
 		
 	}
 	public HashMap<String, Integer> getSemestersByYearAndSemester(){
-		
+		return null;
 	}
 	public int getNumCourseInNthSementer(int semester) {
-		
+		return 0;
 	}
 }

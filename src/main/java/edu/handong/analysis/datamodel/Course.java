@@ -20,7 +20,7 @@ public class Course {
 		courseCode = line.split(",")[4].trim();
 		courseName = line.split(",")[5].trim();
 		courseCredit = line.split(",")[6].trim();
-		yearTaken = (Integer)(line.split(",")[7].trim());
-		semesterCourseTaken = (Integer)(line.split(",")[8].trim());
+		yearTaken = Integer.parseInt(line.split(",")[7].trim());
+		semesterCourseTaken = Integer.parseInt(line.split(",")[8].trim());
 	}
 }
