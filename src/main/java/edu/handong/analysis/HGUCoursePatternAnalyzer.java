@@ -38,12 +38,14 @@ public class HGUCoursePatternAnalyzer {
 		
 		// To sort HashMap entries by key values so that we can save the results by student ids in ascending order.
 		Map<String, Student> sortedStudents = new TreeMap<String,Student>(students); 
-		
+		// Yet..
 		// Generate result lines to be saved.
 		ArrayList<String> linesToBeSaved = countNumberOfCoursesTakenInEachSemester(sortedStudents);
+		// Yet..
 		
 		// Write a file (named like the value of resultPath) with linesTobeSaved.
 		Utils.writeAFile(linesToBeSaved, resultPath);
+		// Yet..
 	}
 	
 	/**
@@ -82,7 +84,7 @@ public class HGUCoursePatternAnalyzer {
 	 * @return
 	 */
 	private ArrayList<String> countNumberOfCoursesTakenInEachSemester(Map<String, Student> sortedStudents) {
-		
+		// Yet..
 		// TODO: Implement this method
 		
 		return null; // do not forget to return a proper variable.
