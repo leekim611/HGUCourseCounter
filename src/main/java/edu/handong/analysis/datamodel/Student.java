@@ -13,12 +13,13 @@ public class Student {
 		this.studentID = studentID;
 	}
 	public void addCourse(Course newRecord) {
-		
+		coursesTaken.add(newRecord);
 	}
 	public HashMap<String, Integer> getSemestersByYearAndSemester(){
-		return null;
+		return semestersByYearAndSemester;
 	}
 	public int getNumCourseInNthSementer(int semester) {
+		
 		return 0;
 	}
 }

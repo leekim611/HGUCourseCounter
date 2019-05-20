@@ -53,12 +53,21 @@ public class HGUCoursePatternAnalyzer {
 	 * @return
 	 */
 	private HashMap<String,Student> loadStudentCourseRecords(ArrayList<String> lines) {
+		students = new HashMap<String, Student>();
+		for (String line : lines) {
+			String studentID = line.split(",")[0].trim();
+			Student student = new Student(studentID);
+			Course course = new Course(line);
+			student.addCourse(course);
+			students.put(studentID, student);
+		}
 		
-		// TODO: Implement this method
-		
-		return null; // do not forget to return a proper variable.
+		return students; // do not forget to return a proper variable.
 	}
-
+//  StudentID, YearMonthGraduated, FistMajor, SecondMajor, 
+//	CourseCode, CourseName, CourseCredit, YearTaken, SemesterTaken
+//	0001, 200802, Major1, Major2, 
+//	GEK10001, 채플(한국어) 1, 0.0, 2002, 1
 	/**
 	 * This method generate the number of courses taken by a student in each semester. The result file look like this:
 	 * StudentID, TotalNumberOfSemestersRegistered, Semester, NumCoursesTakenInTheSemester
