@@ -10,6 +10,7 @@ public class Utils {
 	public static ArrayList<String> getLines(String file, boolean removeHeader) {
 		ArrayList<String> lines = new ArrayList<String>();
 		Scanner inputStream = null;
+		boolean firstLine = true;
 		if (removeHeader) {
 			try {
 				inputStream = new Scanner(new File(file));
@@ -19,6 +20,10 @@ public class Utils {
 			}
 			while (inputStream.hasNextLine ()) {
 				String line = inputStream.nextLine ();
+				if (firstLine) {
+					firstLine = false;
+					continue;
+				}
 				lines.add(line);
 			}
 			inputStream.close ();
