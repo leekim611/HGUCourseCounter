@@ -16,20 +16,7 @@ public class Student {
 		coursesTaken = new ArrayList<Course>();
 		coursesTaken.add(newRecord);
 	}
-	/*public HashMap<String, Integer> setSemestersByYearAndSemester(ArrayList<Course> coursesTaken){
-		for(int index = 0; index < coursesTaken.size(); index++) {
-			semestersByYearAndSemester.put(coursesTaken.get(index))
-		}
-	}*/
 	public HashMap<String, Integer> getSemestersByYearAndSemester(){
-		semestersByYearAndSemester = new HashMap<String, Integer>();
-		int nthSemester = 1;
-		for (int index = 0; index < coursesTaken.size(); index++) {
-			String yearTaken = coursesTaken.get(index).getYearTaken() + "";
-			String semesterCourseTaken = coursesTaken.get(index).getSemesterCourseTaken() + "";
-			String semester = yearTaken + semesterCourseTaken;
-			semestersByYearAndSemester.put(semester, nthSemester++);
-		}
 		return semestersByYearAndSemester;
 	}
 	public int getNumCourseInNthSemester(int semester) {
@@ -38,7 +25,23 @@ public class Student {
 		return 0;
 	}
 	
+	// additional setter
+	public void setSemestersByYearAndSemester(ArrayList<Course> coursesTaken){
+		semestersByYearAndSemester = new HashMap<String, Integer>();
+		int nthSemester = 1;
+		for (int index = 0; index < coursesTaken.size(); index++) {
+			String yearTaken = coursesTaken.get(index).getYearTaken() + "";
+			String semesterCourseTaken = coursesTaken.get(index).getSemesterCourseTaken() + "";
+			String semester = yearTaken + semesterCourseTaken;
+			semestersByYearAndSemester.put(semester, nthSemester++);
+		}
+	}
+	// additional getter
 	public String getStudentID() {
 		return studentID;
+	}
+	// additional getter
+	public ArrayList<Course> getCoursesTaken(){
+		return coursesTaken;
 	}
 }

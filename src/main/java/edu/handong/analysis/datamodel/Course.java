@@ -23,11 +23,52 @@ public class Course {
 		yearTaken = Integer.parseInt(line.split(",")[7].trim());			// 2002
 		semesterCourseTaken = Integer.parseInt(line.split(",")[8].trim());	// 1
 	}
+
+	public String getStudentID() {
+		return studentID;
+	}
+
+	public String getYearMonthGraduated() {
+		return yearMonthGraduated;
+	}
+
+	public String getFirstMajor() {
+		return firstMajor;
+	}
+
+	public String getSecondMajor() {
+		return secondMajor;
+	}
+
+	public String getCourseCode() {
+		return courseCode;
+	}
+
+	public String getCourseName() {
+		return courseName;
+	}
+
+	public String getCourseCredit() {
+		return courseCredit;
+	}
 	
 	public int getYearTaken() {
 		return yearTaken;
 	}
 	public int getSemesterCourseTaken() {
 		return semesterCourseTaken;
+	}
+	
+	// for check
+	public void printCourse(Course course) {
+		System.out.println(course.getStudentID());
+		System.out.println(course.getYearMonthGraduated());
+		System.out.println(course.getFirstMajor());
+		System.out.println(course.getSecondMajor());
+		System.out.println(course.getCourseCode());
+		System.out.println(course.getCourseName());
+		System.out.println(course.getCourseCredit());
+		System.out.println(course.getYearTaken());
+		System.out.println(course.getSemesterCourseTaken());
 	}
 }
