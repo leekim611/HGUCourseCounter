@@ -38,14 +38,12 @@ public class HGUCoursePatternAnalyzer {
 		
 		// To sort HashMap entries by key values so that we can save the results by student ids in ascending order.
 		Map<String, Student> sortedStudents = new TreeMap<String,Student>(students); 
-		// Yet..
+		
 		// Generate result lines to be saved.
 		ArrayList<String> linesToBeSaved = countNumberOfCoursesTakenInEachSemester(sortedStudents);
-		// Yet..
 		
 		// Write a file (named like the value of resultPath) with linesTobeSaved.
 		Utils.writeAFile(linesToBeSaved, resultPath);
-		// Yet..
 	}
 	
 	/**
@@ -84,9 +82,22 @@ public class HGUCoursePatternAnalyzer {
 	 * @return
 	 */
 	private ArrayList<String> countNumberOfCoursesTakenInEachSemester(Map<String, Student> sortedStudents) {
-		// Yet..
-		// TODO: Implement this method
-		
-		return null; // do not forget to return a proper variable.
+		ArrayList<String> linesToBeSaved = new ArrayList<String>();
+		linesToBeSaved.add("StudentID,TotalNumberOfSemestersRegistered,Semester,NumCoursesTakenInTheSemester");
+		for (String key : sortedStudents.keySet()) {
+			Student student = sortedStudents.get(key);
+			// studentID
+			String studentID = student.getStudentID();
+			// total semesters
+			HashMap<String, Integer> semestersByYearAndSemester = student.getSemestersByYearAndSemester();
+			String totalNumOfSemesters = semestersByYearAndSemester.size() + "";
+			// semester
+			for (String yearSemester : semestersByYearAndSemester.keySet()) {
+				String semester = semestersByYearAndSemester.get(yearSemester) + "";
+				String NumCoursesTakenInTheSemester = student.getNumCourseInNthSemester(Integer.parseInt(semester)) + "";
+				linesToBeSaved.add(studentID + "," + totalNumOfSemesters + "," + semester + "," + NumCoursesTakenInTheSemester);
+			}
+		}
+		return linesToBeSaved; // do not forget to return a proper variable.
 	}
 }

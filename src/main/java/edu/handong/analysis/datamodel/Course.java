@@ -12,15 +12,22 @@ public class Course {
 	private int yearTaken;
 	private int semesterCourseTaken;
 	
-	public Course(String line) {
-		studentID = line.split(",")[0].trim();
-		yearMonthGraduated = line.split(",")[1].trim();
-		firstMajor = line.split(",")[2].trim();
-		secondMajor = line.split(",")[3].trim();
-		courseCode = line.split(",")[4].trim();
-		courseName = line.split(",")[5].trim();
-		courseCredit = line.split(",")[6].trim();
-		yearTaken = Integer.parseInt(line.split(",")[7].trim());
-		semesterCourseTaken = Integer.parseInt(line.split(",")[8].trim());
+	public Course(String line) {											// e.g, first line
+		studentID = line.split(",")[0].trim();								// 0001
+		yearMonthGraduated = line.split(",")[1].trim();						// 200802
+		firstMajor = line.split(",")[2].trim();								// Major1
+		secondMajor = line.split(",")[3].trim();							// Major2
+		courseCode = line.split(",")[4].trim();								// GEK10001
+		courseName = line.split(",")[5].trim();								// 채플(한국어) 1
+		courseCredit = line.split(",")[6].trim();							// 0.0
+		yearTaken = Integer.parseInt(line.split(",")[7].trim());			// 2002
+		semesterCourseTaken = Integer.parseInt(line.split(",")[8].trim());	// 1
+	}
+	
+	public int getYearTaken() {
+		return yearTaken;
+	}
+	public int getSemesterCourseTaken() {
+		return semesterCourseTaken;
 	}
 }

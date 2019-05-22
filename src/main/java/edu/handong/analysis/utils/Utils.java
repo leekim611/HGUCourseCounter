@@ -3,6 +3,7 @@ package edu.handong.analysis.utils;
 import java.util.ArrayList;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.Scanner;
 
 public class Utils {
@@ -30,7 +31,17 @@ public class Utils {
 		}
 		return lines;
 	}
-	public static void writeAFile(ArrayList<String> lines, String targerFileName) {
-		return;
+	public static void writeAFile(ArrayList<String> lines, String targetFileName) {
+		PrintWriter outputStream = null;
+		try{
+			outputStream = new PrintWriter(targetFileName);
+		} catch(FileNotFoundException e) {
+			System.out.println("The file path does not exist. Please check your CLI argument!");
+			System.exit(0);
+		}
+		for (String line : lines) {
+			outputStream.println(line);
+		}
+		outputStream.close();
 	}
 }
