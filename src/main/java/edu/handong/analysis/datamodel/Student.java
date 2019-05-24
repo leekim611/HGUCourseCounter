@@ -13,7 +13,6 @@ public class Student {
 		this.studentID = studentID;
 	}
 	public void addCourse(Course newRecord) {
-		coursesTaken = new ArrayList<Course>();
 		coursesTaken.add(newRecord);
 	}
 	public HashMap<String, Integer> getSemestersByYearAndSemester(){
@@ -43,5 +42,11 @@ public class Student {
 	// additional getter
 	public ArrayList<Course> getCoursesTaken(){
 		return coursesTaken;
+	}
+	public void setCoursesTaken(ArrayList<Course> coursesTaken) {
+		this.coursesTaken = coursesTaken;
+	}
+	public void setStudentID(String studentID) {
+		this.studentID = studentID;
 	}
 }

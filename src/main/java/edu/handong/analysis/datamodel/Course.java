@@ -61,7 +61,7 @@ public class Course {
 	
 	// for check
 	public void printCourse(Course course) {
-		System.out.println(course.getStudentID());
+		System.out.println("[" + course.getStudentID() + "]");
 		System.out.println(course.getYearMonthGraduated());
 		System.out.println(course.getFirstMajor());
 		System.out.println(course.getSecondMajor());

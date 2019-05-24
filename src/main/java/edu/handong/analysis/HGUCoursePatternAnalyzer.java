@@ -38,17 +38,6 @@ public class HGUCoursePatternAnalyzer {
 		
 		// To sort HashMap entries by key values so that we can save the results by student ids in ascending order.
 		Map<String, Student> sortedStudents = new TreeMap<String,Student>(students); 
-		/*
-		for (String keyValue : sortedStudents.keySet()) {
-			System.out.println(keyValue + "==================================================================");
-			Student student = sortedStudents.get(keyValue);
-			ArrayList<Course> coursesTaken = student.getCoursesTaken();
-			for (Course course : coursesTaken) {
-				course.printCourse(course);
-			}
-			
-		}
-		*/
 		
 		// Generate result lines to be saved.
 		ArrayList<String> linesToBeSaved = countNumberOfCoursesTakenInEachSemester(sortedStudents);
@@ -63,46 +52,117 @@ public class HGUCoursePatternAnalyzer {
 	 * @param lines
 	 * @return
 	 */
-	private HashMap<String,Student> loadStudentCourseRecords(ArrayList<String> lines) {
- 		students = new HashMap<String, Student>();
+	  HashMap<String,Student> loadStudentCourseRecords(ArrayList<String> lines) {
+		students = new HashMap<String, Student>();
+		for (String line : lines) {
+			String studentID = line.split(",")[0].trim();
+			Course course = new Course(line);
+			if (students.containsKey(studentID)) {
+				students.get(studentID).addCourse(course);
+			}
+			else {
+				Student student = students.get(studentID);
+				student = new Student(studentID);
+				ArrayList<Course> courses = new ArrayList<Course>();
+				student.setCoursesTaken(courses);
+				student.addCourse(course);
+				students.put(studentID, student);
+			}
+		}
+		/*
+		students = new HashMap<String, Student>();
+		Student student = new Student(null);
+		
+		String previousStudentID = lines.get(0).split(",")[0].trim();
+		
+		for (String line : lines) {
+			
+			String studentID = line.split(",")[0].trim();
+			if (!previousStudentID.equals(studentID)) {
+				student.setCoursesTaken(null);
+			}
+			student.setStudentID(studentID);
+			Course course = new Course(line);
+			if (student.getCoursesTaken() == null) {
+				ArrayList<Course> courses = new ArrayList<Course>();
+				student.setCoursesTaken(courses);
+			}
+			student.addCourse(course);
+			students.put(studentID, student);
+			for (String IDID : students.keySet()) {
+				Student stst = students.get(IDID);
+				for (Course coco : stst.getCoursesTaken()) {
+					Course coco2 = coco;
+				}
+			}
+			
+			previousStudentID = studentID;
+		}
+		Map<String, Student> sortedStudents = new TreeMap<String,Student>(students); 
+		for (String studentID : sortedStudents.keySet()) {
+			String line100 = lines.get(100);
+			//System.out.println("=============" + studentID + "=============");
+			Student studentire = students.get(studentID);
+			ArrayList<Course> courses = studentire.getCoursesTaken();
+			if (studentID.equals(line100.split(",")[0].trim())) {
+				for (Course course : courses) {
+					course.printCourse(course);
+				}
+			}
+		}*/
+		/*
+		String previousStudentID = lines.get(0).split(",")[0].trim();
+		for (String line : lines) {
+			String studentID = line.split(",")[0].trim();
+			Course course = new Course(line);
+			if (!previousStudentID.equals(studentID) || line.equals(lines.get(0))) {
+				students.put(studentID, students.get(previousStudentID));
+				Student student = new Student(studentID);
+				ArrayList<Course> courses = student.getCoursesTaken();
+				courses = new ArrayList<Course>();
+			}
+			if(students.containsKey(studentID)) {
+				ArrayList<Course> courses = students.get(studentID).getCoursesTaken();
+				courses = new ArrayList<Course>();
+				students.get(studentID).addCourse(course);
+			} else {
+				Student student = new Student(studentID);
+				student.addCourse(course);
+			}
+			previousStudentID = studentID;
+		}*/
 		/*
 		for (String line : lines) {
 			String studentID = line.split(",")[0].trim();
 			Student student = new Student(studentID);
-			Course course = new Course(line);
-			student.addCourse(course);
-			
+			ArrayList<Course> courses = student.getCoursesTaken();
+			courses = new ArrayList<Course>();
 			students.put(studentID, student);
-		}*/
-		for (int index = 0; index < lines.size(); index++) {
-			String studentID = lines.get(index).split(",")[0].trim();
-			Student student = new Student(studentID);
-			Course course = new Course(lines.get(index));
-			student.addCourse(course);
-			if (index == lines.size() - 1) {
-				students.put(studentID, student);
-				break;
-			}
-			if (!(lines.get(index).split(",")[0].trim()).equals(lines.get(index+1).split(",")[0].trim())) {
-				students.put(studentID, student);
-			}
-			// check ArrayList<Course> in Student
-			ArrayList<Course> courses = student.getCoursesTaken();
-			System.out.println("[" + courses.size() + "]");
-			for (Course coursea : courses) {
-				coursea.printCourse(coursea);
-			}
 		}
-		
-		for (String keyValue : students.keySet()) {
-			Student student = students.get(keyValue);
-			ArrayList<Course> courses = student.getCoursesTaken();
-			System.out.println(courses.size());
-			/*
+		for (String line : lines) {
+			Course course = new Course(line);
+			for (String studentID : students.keySet()) {
+				Student student = students.get(studentID);
+				if (studentID.equals(line.split(",")[0].trim())) {
+					student.addCourse(course);
+					break;
+				}
+				else if (Integer.parseInt(studentID) < Integer.parseInt(line.split(",")[0].trim())){
+					students.put(studentID, student);
+					continue;
+				}
+			}
+		}*/
+		// check ArrayList<Course> in Student
+		/*
+		Map<String, Student> sortedStudents = new TreeMap<String,Student>(students); 
+		for (String studentID : sortedStudents.keySet()) {
+			Student studentch = sortedStudents.get(studentID);
+			ArrayList<Course> courses = studentch.getCoursesTaken();
 			for (Course course : courses) {
 				course.printCourse(course);
-			}*/
-		}
+			}
+		}*/
 		
 		return students; // do not forget to return a proper variable.
 	}
