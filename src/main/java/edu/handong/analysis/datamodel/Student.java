@@ -19,20 +19,37 @@ public class Student {
 		return semestersByYearAndSemester;
 	}
 	public int getNumCourseInNthSemester(int semester) {
-		semestersByYearAndSemester = getSemestersByYearAndSemester();
-		
-		return 0;
+		int courseCount = 0;
+		for (String yearSemester : semestersByYearAndSemester.keySet()) {
+			int nthSemester = semestersByYearAndSemester.get(yearSemester);
+			if (nthSemester == semester) {
+				for (Course course : coursesTaken) {
+					String yearSemesterInCourse = course.getYearTaken() + "" + "-" + course.getSemesterCourseTaken() + "";
+					if (yearSemester.equals(yearSemesterInCourse)) {
+						courseCount++;
+					}
+				}
+			}
+		}
+		return courseCount;
 	}
 	
 	// additional setter
 	public void setSemestersByYearAndSemester(ArrayList<Course> coursesTaken){
 		semestersByYearAndSemester = new HashMap<String, Integer>();
 		int nthSemester = 1;
+		String previousYearTaken = coursesTaken.get(0).getYearTaken() + "";
+		String previousSemesterCourseTaken = coursesTaken.get(0).getSemesterCourseTaken() + "";
 		for (int index = 0; index < coursesTaken.size(); index++) {
 			String yearTaken = coursesTaken.get(index).getYearTaken() + "";
 			String semesterCourseTaken = coursesTaken.get(index).getSemesterCourseTaken() + "";
-			String semester = yearTaken + semesterCourseTaken;
-			semestersByYearAndSemester.put(semester, nthSemester++);
+			String semester = yearTaken + "-" + semesterCourseTaken;
+			if (!previousYearTaken.equals(yearTaken) || !previousSemesterCourseTaken.equals(semesterCourseTaken)) {
+				nthSemester++;
+			}
+			previousYearTaken = yearTaken;
+			previousSemesterCourseTaken = semesterCourseTaken;
+			semestersByYearAndSemester.put(semester, nthSemester);
 		}
 	}
 	// additional getter
@@ -43,9 +60,11 @@ public class Student {
 	public ArrayList<Course> getCoursesTaken(){
 		return coursesTaken;
 	}
+	// additional setter
 	public void setCoursesTaken(ArrayList<Course> coursesTaken) {
 		this.coursesTaken = coursesTaken;
 	}
+	// additional setter
 	public void setStudentID(String studentID) {
 		this.studentID = studentID;
 	}

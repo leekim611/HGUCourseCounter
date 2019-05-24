@@ -34,11 +34,14 @@ public class Utils {
 	}
 	public static void writeAFile(ArrayList<String> lines, String targetFileName) {
 		PrintWriter outputStream = null;
-		try{
+		File makeDirectory = new File(targetFileName);
+		if (!makeDirectory.getParentFile().exists()) {
+			makeDirectory.getParentFile().mkdirs();
+		}
+		try {
 			outputStream = new PrintWriter(targetFileName);
-		} catch(FileNotFoundException e) {
-			System.out.println("The file path does not exist. Please check your CLI argument!");
-			System.exit(0);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
 		}
 		for (String line : lines) {
 			outputStream.println(line);

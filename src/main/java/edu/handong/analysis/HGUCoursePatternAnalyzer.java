@@ -69,8 +69,8 @@ public class HGUCoursePatternAnalyzer {
 				students.put(studentID, student);
 			}
 		}
-		// check ArrayList<Course> in Student
 		/*
+		// check ArrayList<Course> in Student
 		Map<String, Student> sortedStudents = new TreeMap<String,Student>(students); 
 		for (String studentID : sortedStudents.keySet()) {
 			Student studentch = sortedStudents.get(studentID);
@@ -104,23 +104,33 @@ public class HGUCoursePatternAnalyzer {
 		linesToBeSaved.add("StudentID,TotalNumberOfSemestersRegistered,Semester,NumCoursesTakenInTheSemester");
 		for (String key : sortedStudents.keySet()) {
 			Student student = sortedStudents.get(key);
-			// studentID
+			// StudentID
 			String studentID = student.getStudentID();
-			// total semesters
+			// TotalNumberOfSemestersRegistered
 			student.setSemestersByYearAndSemester(student.getCoursesTaken());
 			HashMap<String, Integer> semestersByYearAndSemester = student.getSemestersByYearAndSemester();
 			/*
-			for (String hi : semestersByYearAndSemester.keySet()) {
+			// check
+			Map<String, Integer> sorted = new TreeMap<String, Integer>(semestersByYearAndSemester);
+			for (String hi : sorted.keySet()) {
 				int a = semestersByYearAndSemester.get(hi);
+				System.out.println(hi);
 				System.out.println(a);
 			}*/
 			String totalNumOfSemesters = semestersByYearAndSemester.size() + "";
 			// semester
-			for (String yearSemester : semestersByYearAndSemester.keySet()) {
+			Map<String, Integer> sortedSemester = new TreeMap<String,Integer>(semestersByYearAndSemester); 
+			for (String yearSemester : sortedSemester.keySet()) {  // yearSemester: 2002-1
 				String semester = semestersByYearAndSemester.get(yearSemester) + "";
 				String NumCoursesTakenInTheSemester = student.getNumCourseInNthSemester(Integer.parseInt(semester)) + "";
 				linesToBeSaved.add(studentID + "," + totalNumOfSemesters + "," + semester + "," + NumCoursesTakenInTheSemester);
 			}
+			/*
+			for (String yearSemester : semestersByYearAndSemester.keySet()) {
+				String semester = semestersByYearAndSemester.get(yearSemester) + "";
+				String NumCoursesTakenInTheSemester = student.getNumCourseInNthSemester(Integer.parseInt(semester)) + "";
+				linesToBeSaved.add(studentID + "," + totalNumOfSemesters + "," + semester + "," + NumCoursesTakenInTheSemester);
+			}*/
 		}
 		return linesToBeSaved; // do not forget to return a proper variable.
 	}
