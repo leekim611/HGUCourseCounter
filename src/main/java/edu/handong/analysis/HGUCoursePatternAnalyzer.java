@@ -101,7 +101,7 @@ public class HGUCoursePatternAnalyzer {
 	 */
 	private ArrayList<String> countNumberOfCoursesTakenInEachSemester(Map<String, Student> sortedStudents) {
 		ArrayList<String> linesToBeSaved = new ArrayList<String>();
-		linesToBeSaved.add("StudentID,TotalNumberOfSemestersRegistered,Semester,NumCoursesTakenInTheSemester");
+		linesToBeSaved.add("StudentID, TotalNumberOfSemestersRegistered, Semester, NumCoursesTakenInTheSemester");
 		for (String key : sortedStudents.keySet()) {
 			Student student = sortedStudents.get(key);
 			// StudentID

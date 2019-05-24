@@ -1,4 +1,4 @@
-StudentID,TotalNumberOfSemestersRegistered,Semester,NumCoursesTakenInTheSemester
+StudentID, TotalNumberOfSemestersRegistered, Semester, NumCoursesTakenInTheSemester
 0001,14,1,9
 0001,14,2,8
 0001,14,3,8
