@@ -5,8 +5,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.Scanner;
-import java.io.File;
-//getParent
+
 public class Utils {
 	public static ArrayList<String> getLines(String file, boolean removeHeader) {
 		ArrayList<String> lines = new ArrayList<String>();

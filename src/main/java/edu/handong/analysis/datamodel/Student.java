@@ -34,7 +34,7 @@ public class Student {
 		return courseCount;
 	}
 	
-	// additional setter
+	// additional method setting semestersByYearAndSemester field
 	public void setSemestersByYearAndSemester(ArrayList<Course> coursesTaken){
 		semestersByYearAndSemester = new HashMap<String, Integer>();
 		int nthSemester = 1;

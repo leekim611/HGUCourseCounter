@@ -23,7 +23,8 @@ public class Course {
 		yearTaken = Integer.parseInt(line.split(",")[7].trim());			// 2002
 		semesterCourseTaken = Integer.parseInt(line.split(",")[8].trim());	// 1
 	}
-
+	
+	// make getter method
 	public String getStudentID() {
 		return studentID;
 	}
