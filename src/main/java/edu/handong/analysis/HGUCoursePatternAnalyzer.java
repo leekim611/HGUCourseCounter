@@ -36,17 +36,20 @@ public class HGUCoursePatternAnalyzer {
 		Options options = createOptions();
 		
 		if (parseOptions(options, args)) {
+			
+			// help
 			if (help) {
 				printHelp(options);
 				return;
 			}
-			
 			// input
-			
+			System.out.println(input);
 			// output
-			
+			System.out.println(output);
 			// analysis
 			if (Integer.parseInt(analysis) == 1) {
+				System.out.println(analysis);
+				
 				try {
 					// when there are not enough arguments from CLI, it throws the NotEnoughArgmentException which must be defined by you.
 					if(args.length<2)
@@ -70,42 +73,20 @@ public class HGUCoursePatternAnalyzer {
 				
 				// Write a file (named like the value of resultPath) with linesTobeSaved.
 				Utils.writeAFile(linesToBeSaved, resultPath);
-			}
-			// coursecode
-			if (Integer.parseInt(analysis) == 2) {
 				
+			}
+			if (Integer.parseInt(analysis) == 2) {
+				System.out.println(analysis);
+				// coursecode
+				System.out.println(coursecode);
 			}
 			
 			// startyear
-			
+			System.out.println(startyear);
 			// endyear
-			
-			
+			System.out.println(endyear);
 			
 		}
-		try {
-			// when there are not enough arguments from CLI, it throws the NotEnoughArgmentException which must be defined by you.
-			if(args.length<2)
-				throw new NotEnoughArgumentException();
-		} catch (NotEnoughArgumentException e) {
-			System.out.println(e.getMessage());
-			System.exit(0);
-		}
-		
-		String dataPath = args[0]; // csv file to be analyzed
-		String resultPath = args[1]; // the file path where the results are saved.
-		ArrayList<String> lines = Utils.getLines(dataPath, true);
-		
-		students = loadStudentCourseRecords(lines);
-		
-		// To sort HashMap entries by key values so that we can save the results by student ids in ascending order.
-		Map<String, Student> sortedStudents = new TreeMap<String,Student>(students); 
-		
-		// Generate result lines to be saved.
-		ArrayList<String> linesToBeSaved = countNumberOfCoursesTakenInEachSemester(sortedStudents);
-		
-		// Write a file (named like the value of resultPath) with linesTobeSaved.
-		Utils.writeAFile(linesToBeSaved, resultPath);
 	}
 	
 	/**
@@ -114,7 +95,7 @@ public class HGUCoursePatternAnalyzer {
 	 * @param lines
 	 * @return
 	 */
-	  HashMap<String,Student> loadStudentCourseRecords(ArrayList<String> lines) {
+	private HashMap<String,Student> loadStudentCourseRecords(ArrayList<String> lines) {
 		students = new HashMap<String, Student>();
 		for (String line : lines) {
 			String studentID = line.split(",")[0].trim();
@@ -229,7 +210,7 @@ public class HGUCoursePatternAnalyzer {
 				.desc("Course code for '-a 2' option")
 				.hasArg()
 				.argName("course code")
-				.required()
+				.required(/*options.getOption("a").getValue().equals("2")*/)
 				.build());
 		
 		// add options by using OptionBuilder
@@ -270,6 +251,7 @@ public class HGUCoursePatternAnalyzer {
 			startyear = cmd.getOptionValue("s");
 			endyear = cmd.getOptionValue("e");
 			help = cmd.hasOption("h");
+			
 		} catch (Exception e) {
 			printHelp(options);
 			return false;
