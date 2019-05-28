@@ -12,6 +12,12 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVPrinter;
+import org.apache.commons.csv.CSVRecord;
+import org.apache.commons.csv.QuoteMode;
+
 import edu.handong.analysis.datamodel.Course;
 import edu.handong.analysis.datamodel.Student;
 import edu.handong.analysis.utils.NotEnoughArgumentException;
@@ -27,6 +33,7 @@ public class HGUCoursePatternAnalyzer {
 	String startyear;
 	String endyear;
 	boolean help;
+	
 	/**
 	 * This method runs our analysis logic to save the number courses taken by each student per semester in a result file.
 	 * Run method must not be changed!!
@@ -85,7 +92,6 @@ public class HGUCoursePatternAnalyzer {
 			System.out.println(startyear);
 			// endyear
 			System.out.println(endyear);
-			
 		}
 	}
 	
@@ -210,7 +216,6 @@ public class HGUCoursePatternAnalyzer {
 				.desc("Course code for '-a 2' option")
 				.hasArg()
 				.argName("course code")
-				.required(/*options.getOption("a").getValue().equals("2")*/)
 				.build());
 		
 		// add options by using OptionBuilder
@@ -244,9 +249,13 @@ public class HGUCoursePatternAnalyzer {
 			
 			input = cmd.getOptionValue("i");
 			output = cmd.getOptionValue("o");
-			analysis = cmd.getOptionValue("a");
+			analysis = cmd.getOptionValue("a");			
 			if (Integer.parseInt(analysis) == 2) {
+				options.getOption("c").setRequired(true);
 				coursecode = cmd.getOptionValue("c");
+				if (coursecode == null) {
+					throw new Exception();
+				}
 			}
 			startyear = cmd.getOptionValue("s");
 			endyear = cmd.getOptionValue("e");
