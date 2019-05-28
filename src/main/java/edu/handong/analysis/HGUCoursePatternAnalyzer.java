@@ -1,5 +1,8 @@
 package edu.handong.analysis;
 
+import java.io.Reader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -53,8 +56,8 @@ public class HGUCoursePatternAnalyzer {
 			System.out.println(input);
 			// output
 			System.out.println(output);
-			// analysis
 			if (Integer.parseInt(analysis) == 1) {
+				// analysis
 				System.out.println(analysis);
 				
 				try {
@@ -83,7 +86,24 @@ public class HGUCoursePatternAnalyzer {
 				
 			}
 			if (Integer.parseInt(analysis) == 2) {
+				// analysis
 				System.out.println(analysis);
+				
+				try {
+					Reader reader = Files.newBufferedReader(Paths.get(input));
+					CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT
+							.withFirstRecordAsHeader()
+							.withIgnoreHeaderCase()
+							.withTrim());
+					students = loadStudentCourseRecords(csvParser);
+					Map<String, Student> sortedStudents = new TreeMap<String,Student>(students); 
+					ArrayList<String> linesToBeSaved = countTheRateOfStudnetsTakenInEachYeaerAndSemester(sortedStudents);
+					
+				} catch (Exception e) {
+					System.out.println ("The file path does not exist. Please check your CLI argument!");
+					System.exit (0);
+				}
+				
 				// coursecode
 				System.out.println(coursecode);
 			}
@@ -130,6 +150,36 @@ public class HGUCoursePatternAnalyzer {
 		}*/
 		
 		return students; // do not forget to return a proper variable.
+	}
+	private HashMap<String, Student> loadStudentCourseRecords(CSVParser csvParser){
+		students = new HashMap<String, Student>();
+		
+		for (CSVRecord csvRecord : csvParser) {
+			String studentID = csvRecord.get("StudentID");
+			Course course = new Course(csvRecord);
+			if (students.containsKey(studentID)) {
+				students.get(studentID).addCourse(course);
+			}
+			else {
+				Student student = students.get(studentID);
+				student = new Student(studentID);
+				ArrayList<Course> courses = new ArrayList<Course>();
+				student.setCoursesTaken(courses);
+				student.addCourse(course);
+				students.put(studentID, student);
+			}
+		}
+		/*
+		// check ArrayList<Course> in Student
+		Map<String, Student> sortedStudents = new TreeMap<String,Student>(students); 
+		for (String studentID : sortedStudents.keySet()) {
+			Student studentch = sortedStudents.get(studentID);
+			ArrayList<Course> courses = studentch.getCoursesTaken();
+			for (Course course : courses) {
+				course.printCourse(course);
+			}
+		}*/
+		return students;
 	}
 //  StudentID, YearMonthGraduated, FistMajor, SecondMajor, 
 //	CourseCode, CourseName, CourseCredit, YearTaken, SemesterTaken
