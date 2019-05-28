@@ -56,7 +56,19 @@ public class Utils {
 		}
 		outputStream.close();
 	}
+	
+	// modify parameter - it can't take CLI variables.
 	public static void writeAFile(HashMap<String, Student> students, String output) {
+		/**
+		 * I wonder that
+		 * 1. If startyear is more than endyear, how does it print?
+		 * 2. Can I make more HashMap or ArrayList? 
+		 *    Maybe type is 'HashMap<ArrayList<String>(Year, Semester), ArrayList<String>(CourseCode, CourseName, TotalStudents , StudentsTaken, Rate)>'
+		 * 3. In HGUCoursePatternAnalyzer.java
+		 *    Don't need a '.required()' at Option("coursecode") when first building.
+		 *    if it's don't need a '.required()' when first building, is it okay that I change it later according to condition (e.f -a 2)
+		 * 4. I can define methods or variables as I want.
+		 */
 		File makeDirectory = new File(output);
 		if (!makeDirectory.getParentFile().exists()) {
 			makeDirectory.getParentFile().mkdirs();

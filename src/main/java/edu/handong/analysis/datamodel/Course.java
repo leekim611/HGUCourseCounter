@@ -26,6 +26,7 @@ public class Course {
 		semesterCourseTaken = Integer.parseInt(line.split(",")[8].trim());	// 1
 	}
 	
+	// make 2nd constructor: parameter is 'CSVRecord' type
 	public Course(CSVRecord csvRecord) {
 		studentID = csvRecord.get("StudentID");
 		yearMonthGraduated = csvRecord.get("YearMonthGraduated");
