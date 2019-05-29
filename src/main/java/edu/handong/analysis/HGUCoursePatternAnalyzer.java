@@ -4,6 +4,7 @@ import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
@@ -17,9 +18,7 @@ import org.apache.commons.cli.Options;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
-import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.csv.CSVRecord;
-import org.apache.commons.csv.QuoteMode;
 
 import edu.handong.analysis.datamodel.Course;
 import edu.handong.analysis.datamodel.Student;
@@ -98,6 +97,7 @@ public class HGUCoursePatternAnalyzer {
 					students = loadStudentCourseRecords(csvParser);
 					Map<String, Student> sortedStudents = new TreeMap<String,Student>(students); 
 					ArrayList<String> linesToBeSaved = theRateOfStudentsTakingCoursePerYearAndSemester(sortedStudents);
+					Utils.writeAFile(linesToBeSaved, output);
 				} catch (Exception e) {
 					System.out.println ("The file path does not exist. Please check your CLI argument!");
 					System.exit (0);
@@ -106,12 +106,15 @@ public class HGUCoursePatternAnalyzer {
 		}
 	}
 	
+	
+	/*
 	/**
 	 * This method create HashMap<String,Student> from the data csv file. Key is a student id and the corresponding object is an instance of Student.
 	 * The Student instance have all the Course instances taken by the student.
 	 * @param lines
 	 * @return
 	 */
+	/* old-used code
 	private HashMap<String,Student> loadStudentCourseRecords(ArrayList<String> lines) {
 		students = new HashMap<String, Student>();
 		for (String line : lines) {
@@ -130,7 +133,7 @@ public class HGUCoursePatternAnalyzer {
 			}
 		}		
 		return students; // do not forget to return a proper variable.
-	}
+	}*/
 	private HashMap<String, Student> loadStudentCourseRecords(CSVParser csvParser){
 		students = new HashMap<String, Student>();
 		
@@ -188,7 +191,7 @@ public class HGUCoursePatternAnalyzer {
 				linesToBeSaved.add(studentID + "," + totalNumOfSemesters + "," + semester + "," + NumCoursesTakenInTheSemester);
 			}
 		}
-		return linesToBeSaved; // do not forget to return a proper variable.
+		return linesToBeSaved;
 	}
 	
 	private ArrayList<String> theRateOfStudentsTakingCoursePerYearAndSemester(Map<String, Student> sortedStudents) {
@@ -196,38 +199,40 @@ public class HGUCoursePatternAnalyzer {
 		linesToBeSaved.add("Year,Semester,CouseCode, CourseName,TotalStudents,StudentsTaken,Rate");
 		int totalStudents = 0;
 		int studentsTaken = 0;
+		String courseName = whatIsCourseName(coursecode, sortedStudents);
+		double rate;
+		// e.g, (2000 2, 2004 1, 2001 2) in sorted order like (2000 2, 2001 2, 2004 1)
+		ArrayList<String> yearAndSemesterAmongStartYearAndEndYear = new ArrayList<String>();
+		yearAndSemesterAmongStartYearAndEndYear = 
+				setYearAndSemesterAmongStartYearAndEndYearHavingCourseCode
+				(sortedStudents, startyear, endyear, coursecode);
 		
-		for (int year = Integer.parseInt(startyear); year <= Integer.parseInt(endyear); year++) {
-			for (int semester = 1; semester <= 4; semester++) {
-				for (String key : sortedStudents.keySet()) {
-					Student student = sortedStudents.get(key);
-					ArrayList<Course> courses = student.getCoursesTaken();
-					for (Course course : courses) {
-						if (coursecode.equals(course.getCourseCode())) {
-							
+		for (String yearAndSemester : yearAndSemesterAmongStartYearAndEndYear) {
+			int year = Integer.parseInt(yearAndSemester.split(" ")[0].trim());
+			int semester = Integer.parseInt(yearAndSemester.split(" ")[1].trim());
+			
+			for (String key : sortedStudents.keySet()) {
+				Student student = sortedStudents.get(key);
+				ArrayList<Course> courses = student.getCoursesTaken();
+				for (Course course : courses) {
+					int yearTaken = course.getYearTaken();
+					int semesterTaken = course.getSemesterCourseTaken();
+					String courseCode = course.getCourseCode();
+					if (year == yearTaken && semester == semesterTaken) {
+						totalStudents++;
+						if (courseCode.equals(coursecode)) {
+							studentsTaken++;
 						}
 					}
 				}
 			}
+			rate = Math.round(((double) studentsTaken / totalStudents)*10)/10.0;
+			String rateString = rate + "" + "%";
+			linesToBeSaved.add(year + "" + "," + semester + "" + "," + coursecode + "," + courseName + "," + totalStudents + "" + "," + studentsTaken + "" + "," + rateString);
+			totalStudents = 0;
+			studentsTaken = 0;
 		}
 		
-		
-		for (String key : sortedStudents.keySet()) {
-			Student student = sortedStudents.get(key);
-			// Year
-			
-			// Semester
-			
-			// CourseCode
-			
-			// CourseName
-			
-			// TotalStudents
-			
-			// StudentsTaken
-			
-			// Rate
-		}
 		return linesToBeSaved;
 	}
 	
@@ -319,5 +324,43 @@ public class HGUCoursePatternAnalyzer {
 		String header = "HGU Course Analyzer";
 		String footer = "";
 		formatter.printHelp("HGUCourseCounter", header, options, footer, true);
+	}
+	public ArrayList<String> setYearAndSemesterAmongStartYearAndEndYearHavingCourseCode(
+			Map<String, Student> sortedStudents, String startyear, String endyear, String coursecode){
+		ArrayList<String> yearAndSemesterAmongStartYearAndEndYear = new ArrayList<String>();
+		int startYear = Integer.parseInt(startyear);
+		int endYear = Integer.parseInt(endyear);
+		
+		for (String key : sortedStudents.keySet()) {
+			Student student = sortedStudents.get(key);
+			ArrayList<Course> courses = student.getCoursesTaken();
+			for (Course course : courses) {
+				int yearTaken = course.getYearTaken();
+				int semesterCourseTaken = course.getSemesterCourseTaken();
+				String courseCode = course.getCourseCode();
+				String savedYearSemester = yearTaken + "" + " " + semesterCourseTaken + "";
+				if (startYear <= yearTaken && yearTaken <= endYear && coursecode.equals(courseCode)) {
+					if (!yearAndSemesterAmongStartYearAndEndYear.contains(savedYearSemester)) {
+						yearAndSemesterAmongStartYearAndEndYear.add(savedYearSemester);
+					}
+				}
+			}
+		}
+		yearAndSemesterAmongStartYearAndEndYear.sort(Comparator.naturalOrder());
+		return yearAndSemesterAmongStartYearAndEndYear;
+	}
+	public String whatIsCourseName(String coursecode, Map<String, Student> sortedStudents) {
+		String courseName;
+		for (String key : sortedStudents.keySet()) {
+			Student student = sortedStudents.get(key);
+			ArrayList<Course> courses = student.getCoursesTaken();
+			for (Course course : courses) {
+				if (coursecode.equals(course.getCourseCode())) {
+					courseName = course.getCourseName();
+					return courseName;
+				}
+			}
+		}
+		return null;
 	}
 }
