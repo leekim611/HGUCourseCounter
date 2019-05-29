@@ -35,7 +35,7 @@ public class Student {
 	}
 	
 	// additional method setting semestersByYearAndSemester field
-	public void setSemestersByYearAndSemester(ArrayList<Course> coursesTaken){
+	public void setSemestersByYearAndSemester(ArrayList<Course> coursesTaken, String startyear, String endyear){
 		semestersByYearAndSemester = new HashMap<String, Integer>();
 		int nthSemester = 1;
 		String previousYearTaken = coursesTaken.get(0).getYearTaken() + "";
@@ -44,12 +44,16 @@ public class Student {
 			String yearTaken = coursesTaken.get(index).getYearTaken() + "";
 			String semesterCourseTaken = coursesTaken.get(index).getSemesterCourseTaken() + "";
 			String semester = yearTaken + "-" + semesterCourseTaken;
-			if (!previousYearTaken.equals(yearTaken) || !previousSemesterCourseTaken.equals(semesterCourseTaken)) {
-				nthSemester++;
+			if (Integer.parseInt(startyear) <= Integer.parseInt(yearTaken) && Integer.parseInt(yearTaken) <= Integer.parseInt(endyear)) {
+				if ((!previousYearTaken.equals(yearTaken) ||
+						!previousSemesterCourseTaken.equals(semesterCourseTaken)) &&
+						Integer.parseInt(previousYearTaken) >= Integer.parseInt(startyear)) {
+					nthSemester++;
+				}
+				previousYearTaken = yearTaken;
+				previousSemesterCourseTaken = semesterCourseTaken;
+				semestersByYearAndSemester.put(semester, nthSemester);
 			}
-			previousYearTaken = yearTaken;
-			previousSemesterCourseTaken = semesterCourseTaken;
-			semestersByYearAndSemester.put(semester, nthSemester);
 		}
 	}
 	// additional getter

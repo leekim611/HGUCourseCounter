@@ -52,13 +52,7 @@ public class HGUCoursePatternAnalyzer {
 				printHelp(options);
 				return;
 			}
-			// input
-			System.out.println(input);
-			// output
-			System.out.println(output);
 			if (Integer.parseInt(analysis) == 1) {
-				// analysis
-				System.out.println(analysis);
 				
 				try {
 					// when there are not enough arguments from CLI, it throws the NotEnoughArgmentException which must be defined by you.
@@ -71,10 +65,18 @@ public class HGUCoursePatternAnalyzer {
 				
 				String dataPath = input; // csv file to be analyzed
 				String resultPath = output; // the file path where the results are saved.
-				ArrayList<String> lines = Utils.getLines(dataPath, true);
 				
-				students = loadStudentCourseRecords(lines);
-				
+				try {
+					Reader reader = Files.newBufferedReader(Paths.get(dataPath));
+					CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT
+							.withFirstRecordAsHeader()
+							.withIgnoreHeaderCase()
+							.withTrim());
+					students = loadStudentCourseRecords(csvParser);
+				} catch (Exception e) {
+					System.out.println ("The file path does not exist. Please check your CLI argument!");
+					System.exit (0);
+				}
 				// To sort HashMap entries by key values so that we can save the results by student ids in ascending order.
 				Map<String, Student> sortedStudents = new TreeMap<String,Student>(students); 
 				
@@ -86,8 +88,6 @@ public class HGUCoursePatternAnalyzer {
 				
 			}
 			if (Integer.parseInt(analysis) == 2) {
-				// analysis
-				System.out.println(analysis);
 				
 				try {
 					Reader reader = Files.newBufferedReader(Paths.get(input));
@@ -97,21 +97,12 @@ public class HGUCoursePatternAnalyzer {
 							.withTrim());
 					students = loadStudentCourseRecords(csvParser);
 					Map<String, Student> sortedStudents = new TreeMap<String,Student>(students); 
-					ArrayList<String> linesToBeSaved = countTheRateOfStudnetsTakenInEachYeaerAndSemester(sortedStudents);
-					
+					ArrayList<String> linesToBeSaved = theRateOfStudentsTakingCoursePerYearAndSemester(sortedStudents);
 				} catch (Exception e) {
 					System.out.println ("The file path does not exist. Please check your CLI argument!");
 					System.exit (0);
 				}
-				
-				// coursecode
-				System.out.println(coursecode);
 			}
-			
-			// startyear
-			System.out.println(startyear);
-			// endyear
-			System.out.println(endyear);
 		}
 	}
 	
@@ -137,18 +128,7 @@ public class HGUCoursePatternAnalyzer {
 				student.addCourse(course);
 				students.put(studentID, student);
 			}
-		}
-		/*
-		// check ArrayList<Course> in Student
-		Map<String, Student> sortedStudents = new TreeMap<String,Student>(students); 
-		for (String studentID : sortedStudents.keySet()) {
-			Student studentch = sortedStudents.get(studentID);
-			ArrayList<Course> courses = studentch.getCoursesTaken();
-			for (Course course : courses) {
-				course.printCourse(course);
-			}
-		}*/
-		
+		}		
 		return students; // do not forget to return a proper variable.
 	}
 	private HashMap<String, Student> loadStudentCourseRecords(CSVParser csvParser){
@@ -169,16 +149,6 @@ public class HGUCoursePatternAnalyzer {
 				students.put(studentID, student);
 			}
 		}
-		/*
-		// check ArrayList<Course> in Student
-		Map<String, Student> sortedStudents = new TreeMap<String,Student>(students); 
-		for (String studentID : sortedStudents.keySet()) {
-			Student studentch = sortedStudents.get(studentID);
-			ArrayList<Course> courses = studentch.getCoursesTaken();
-			for (Course course : courses) {
-				course.printCourse(course);
-			}
-		}*/
 		return students;
 	}
 //  StudentID, YearMonthGraduated, FistMajor, SecondMajor, 
@@ -205,17 +175,10 @@ public class HGUCoursePatternAnalyzer {
 			Student student = sortedStudents.get(key);
 			// StudentID
 			String studentID = student.getStudentID();
+			
 			// TotalNumberOfSemestersRegistered
-			student.setSemestersByYearAndSemester(student.getCoursesTaken());
+			student.setSemestersByYearAndSemester(student.getCoursesTaken(), startyear, endyear);
 			HashMap<String, Integer> semestersByYearAndSemester = student.getSemestersByYearAndSemester();
-			/*
-			// check
-			Map<String, Integer> sorted = new TreeMap<String, Integer>(semestersByYearAndSemester);
-			for (String hi : sorted.keySet()) {
-				int a = semestersByYearAndSemester.get(hi);
-				System.out.println(hi);
-				System.out.println(a);
-			}*/
 			String totalNumOfSemesters = semestersByYearAndSemester.size() + "";
 			// semester
 			Map<String, Integer> sortedSemester = new TreeMap<String,Integer>(semestersByYearAndSemester); 
@@ -224,14 +187,48 @@ public class HGUCoursePatternAnalyzer {
 				String NumCoursesTakenInTheSemester = student.getNumCourseInNthSemester(Integer.parseInt(semester)) + "";
 				linesToBeSaved.add(studentID + "," + totalNumOfSemesters + "," + semester + "," + NumCoursesTakenInTheSemester);
 			}
-			/*
-			for (String yearSemester : semestersByYearAndSemester.keySet()) {
-				String semester = semestersByYearAndSemester.get(yearSemester) + "";
-				String NumCoursesTakenInTheSemester = student.getNumCourseInNthSemester(Integer.parseInt(semester)) + "";
-				linesToBeSaved.add(studentID + "," + totalNumOfSemesters + "," + semester + "," + NumCoursesTakenInTheSemester);
-			}*/
 		}
 		return linesToBeSaved; // do not forget to return a proper variable.
+	}
+	
+	private ArrayList<String> theRateOfStudentsTakingCoursePerYearAndSemester(Map<String, Student> sortedStudents) {
+		ArrayList<String> linesToBeSaved = new ArrayList<String>();
+		linesToBeSaved.add("Year,Semester,CouseCode, CourseName,TotalStudents,StudentsTaken,Rate");
+		int totalStudents = 0;
+		int studentsTaken = 0;
+		
+		for (int year = Integer.parseInt(startyear); year <= Integer.parseInt(endyear); year++) {
+			for (int semester = 1; semester <= 4; semester++) {
+				for (String key : sortedStudents.keySet()) {
+					Student student = sortedStudents.get(key);
+					ArrayList<Course> courses = student.getCoursesTaken();
+					for (Course course : courses) {
+						if (coursecode.equals(course.getCourseCode())) {
+							
+						}
+					}
+				}
+			}
+		}
+		
+		
+		for (String key : sortedStudents.keySet()) {
+			Student student = sortedStudents.get(key);
+			// Year
+			
+			// Semester
+			
+			// CourseCode
+			
+			// CourseName
+			
+			// TotalStudents
+			
+			// StudentsTaken
+			
+			// Rate
+		}
+		return linesToBeSaved;
 	}
 	
 	private Options createOptions() {
