@@ -226,7 +226,7 @@ public class HGUCoursePatternAnalyzer {
 					}
 				}
 			}
-			rate = Math.round(((double) studentsTaken / totalStudents)*10)/10.0;
+			rate = Math.round(((double) studentsTaken * 100 / totalStudents) * 10) / 10.0;
 			String rateString = rate + "" + "%";
 			linesToBeSaved.add(year + "" + "," + semester + "" + "," + coursecode + "," + courseName + "," + totalStudents + "" + "," + studentsTaken + "" + "," + rateString);
 			totalStudents = 0;
