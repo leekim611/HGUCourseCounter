@@ -222,6 +222,8 @@ public class HGUCoursePatternAnalyzer {
 					if (year == yearTaken && semester == semesterTaken && checkSameStudent == 0) {
 						totalStudents++;
 						checkSameStudent = 1;
+					}
+					if (year == yearTaken && semester == semesterTaken) {
 						if (courseCode.equals(coursecode)) {
 							studentsTaken++;
 						}
