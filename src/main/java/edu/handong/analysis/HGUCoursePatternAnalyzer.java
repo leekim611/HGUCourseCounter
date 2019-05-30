@@ -210,6 +210,7 @@ public class HGUCoursePatternAnalyzer {
 		for (String yearAndSemester : yearAndSemesterAmongStartYearAndEndYear) {
 			int year = Integer.parseInt(yearAndSemester.split(" ")[0].trim());
 			int semester = Integer.parseInt(yearAndSemester.split(" ")[1].trim());
+			int checkSameStudent = 0;
 			
 			for (String key : sortedStudents.keySet()) {
 				Student student = sortedStudents.get(key);
@@ -218,15 +219,19 @@ public class HGUCoursePatternAnalyzer {
 					int yearTaken = course.getYearTaken();
 					int semesterTaken = course.getSemesterCourseTaken();
 					String courseCode = course.getCourseCode();
-					if (year == yearTaken && semester == semesterTaken) {
+					if (year == yearTaken && semester == semesterTaken && checkSameStudent == 0) {
 						totalStudents++;
+						checkSameStudent = 1;
 						if (courseCode.equals(coursecode)) {
 							studentsTaken++;
 						}
 					}
 				}
+				checkSameStudent = 0;
 			}
-			rate = Math.round(((double) studentsTaken * 100 / totalStudents) * 10) / 10.0;
+			
+			
+			rate = Math.round(((double) studentsTaken * 100 / totalStudents) * 10) / 10.0;			
 			String rateString = rate + "" + "%";
 			linesToBeSaved.add(year + "" + "," + semester + "" + "," + coursecode + "," + courseName + "," + totalStudents + "" + "," + studentsTaken + "" + "," + rateString);
 			totalStudents = 0;
