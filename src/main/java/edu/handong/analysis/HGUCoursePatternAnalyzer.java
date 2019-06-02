@@ -28,13 +28,13 @@ import edu.handong.analysis.utils.Utils;
 public class HGUCoursePatternAnalyzer {
 
 	private HashMap<String,Student> students;
-	String input;
-	String output;
-	String analysis;
-	String coursecode;
-	String startyear;
-	String endyear;
-	boolean help;
+	private String input;
+	private String output;
+	private String analysis;
+	private String coursecode;
+	private String startyear;
+	private String endyear;
+	private boolean help;
 	
 	/**
 	 * This method runs our analysis logic to save the number courses taken by each student per semester in a result file.
