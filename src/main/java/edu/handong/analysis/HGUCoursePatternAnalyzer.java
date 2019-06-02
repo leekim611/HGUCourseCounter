@@ -235,7 +235,9 @@ public class HGUCoursePatternAnalyzer {
 			
 			rate = Math.round(((double) studentsTaken * 100 / totalStudents) * 10) / 10.0;			
 			String rateString = rate + "" + "%";
-			linesToBeSaved.add(year + "" + "," + semester + "" + "," + coursecode + "," + courseName + "," + totalStudents + "" + "," + studentsTaken + "" + "," + rateString);
+			if (totalStudents != 0) {
+				linesToBeSaved.add(year + "" + "," + semester + "" + "," + coursecode + "," + courseName + "," + totalStudents + "" + "," + studentsTaken + "" + "," + rateString);
+			}
 			totalStudents = 0;
 			studentsTaken = 0;
 		}
@@ -337,7 +339,7 @@ public class HGUCoursePatternAnalyzer {
 		ArrayList<String> yearAndSemesterAmongStartYearAndEndYear = new ArrayList<String>();
 		int startYear = Integer.parseInt(startyear);
 		int endYear = Integer.parseInt(endyear);
-		
+		/*
 		for (String key : sortedStudents.keySet()) {
 			Student student = sortedStudents.get(key);
 			ArrayList<Course> courses = student.getCoursesTaken();
@@ -351,6 +353,12 @@ public class HGUCoursePatternAnalyzer {
 						yearAndSemesterAmongStartYearAndEndYear.add(savedYearSemester);
 					}
 				}
+			}
+		}*/
+		for (int i = startYear; i <= endYear; i++) {
+			for (int j = 1; j <= 4; j++) {
+				String savedYearSemester = i + "" + " " + j + "";
+				yearAndSemesterAmongStartYearAndEndYear.add(savedYearSemester);
 			}
 		}
 		yearAndSemesterAmongStartYearAndEndYear.sort(Comparator.naturalOrder());
@@ -371,3 +379,11 @@ public class HGUCoursePatternAnalyzer {
 		return null;
 	}
 }
+
+/*
+ * case 1:
+ * startyear > endyear
+ * 
+ * case 2:
+ * wrong courseName ('c' option)
+ */
